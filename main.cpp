@@ -13,11 +13,15 @@ void host_button_callback(Fl_Widget*w, void* data)
     std::string cmd = main_window.java_prefix->value();
     cmd.append(" -S");
 
-    log("Running '" << cmd << "'");
+    log("\nRunning '" << cmd << "'");
 
     //start server
-    system(cmd.c_str());
-    log("\nFinishing receiving file!");
+    int res = system(cmd.c_str());
+
+    if(res == 0)
+        log("\nFinishing receiving file!");
+    else
+        log("\nThere was a problem while receiving the file.");
 
     server_mode = false;
 }
@@ -33,19 +37,15 @@ void transfer_button_callback(Fl_Widget*w, void* data)
     std::string file_path = main_window.file_input->value();
     
     cmd.append(" -c " + address + " -d rec " + file_path);
-
     log("Running '" << cmd << "'");
-
+    
     //send file
     int res = system(cmd.c_str());
 
-    if(res != 0)
-    {
+    if(res == 0)
+        log("\nFinishing sending file!");
+    else
         log("\nThere was an error while trying to transfer the files, check your address, java prefix and file name.");
-        return;
-    }
-
-    log("\nFinishing sending file!");
 }
 
 int main(int argc, char **argv)
