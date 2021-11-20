@@ -13,7 +13,7 @@ void host_button_callback(Fl_Widget*w, void* data)
     std::string cmd = main_window.java_prefix->value();
     cmd.append(" -S");
 
-    log("running " << cmd);
+    log("Running '" << cmd << "'");
 
     //start server
     system(cmd.c_str());
@@ -34,7 +34,7 @@ void transfer_button_callback(Fl_Widget*w, void* data)
     
     cmd.append(" -c " + address + " -d rec " + file_path);
 
-    log("running " << cmd);
+    log("Running '" << cmd << "'");
 
     //send file
     int res = system(cmd.c_str());
