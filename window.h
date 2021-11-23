@@ -18,7 +18,7 @@ public:
     void configure()
     {
         //window
-        window = new Fl_Window(510, 100, "Fast Data Transfer Gui");
+        window = new Fl_Window(510, 100, "Fast Data Transfer Gui v1");
         window->begin();
 
         //buttons
