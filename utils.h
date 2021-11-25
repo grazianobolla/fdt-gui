@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
+#include <string>
+#include <algorithm>
+
 #include <FL/Fl_File_Chooser.H>
 #include <FL/fl_ask.H>
-#include <string>
 
 #define log(x) std::cout << x << "\n"
 
@@ -27,4 +29,8 @@ void info(const char* msg)
 {
     log(msg);
     fl_message(msg);
+}
+
+void windowify_path(std::string & str){
+    std::replace(str.begin(), str.end(), '/', '\\');
 }

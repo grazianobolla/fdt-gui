@@ -1,6 +1,7 @@
 #include "window.h"
 #include "ipv4.h"
 #include "utils.h"
+#include "os.h"
 
 MainWindow main_window;
 bool server_mode = false;
@@ -15,7 +16,8 @@ void host_button_callback(Fl_Widget *w, void *data)
 
     log("\nRunning '" << cmd << "'");
 
-    int res = system(cmd.c_str()); //start server cmd
+    //start server cmd
+    int res = system(cmd.c_str());
 
     if (res == 0)
         info("Finishing receiving file!");
@@ -46,13 +48,21 @@ void transfer_button_callback(Fl_Widget *w, void *data)
         return;
     }
 
-    cmd.append(" -c " + address + " -d rec " + file_path);
-    log("Running '" << cmd << "'");
+    if(get_os() == WINDOWS)
+    {
+        log("Fixing windows path...");
+        windowify_path(file_path);
+    }
     
-    int res = system(cmd.c_str()); //send file cmd
+    cmd.append(" -c " + address + " -d rec \"" + file_path + "\"");
+
+    log("Running '" << cmd << "'");
+
+    //send file cmd
+    int res = system(cmd.c_str());
 
     if (res == 0)
-        info("Finishing sending file!");
+        info("Finished sending file!");
     else
         alert("There was an error while trying to transfer the files, check your address, java prefix and file name.");
 }
@@ -62,9 +72,12 @@ void select_file_button_callback(Fl_Widget *w, void *data)
     if (choose_file(selected_file_path) == false)
         return;
 
-    log("Selected file: " << selected_file_path);
 
-    main_window.path_display->label(selected_file_path.substr(selected_file_path.find_last_of("/") + 1).c_str());
+    std::string file_name = selected_file_path.substr(selected_file_path.find_last_of("/") + 1).c_str();
+
+    log("Selected file: " << selected_file_path << "(" << file_name.c_str() << ")");
+
+    main_window.path_display->copy_label(file_name.c_str());
 }
 
 int main(int argc, char **argv)
